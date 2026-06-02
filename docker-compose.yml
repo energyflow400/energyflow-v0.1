@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: energyflow_postgres
+    environment:
+      POSTGRES_USER: energyflow
+      POSTGRES_PASSWORD: energyflow
+      POSTGRES_DB: energyflow
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U energyflow -d energyflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    container_name: energyflow_api
+    environment:
+      DATABASE_URL: postgresql+psycopg2://energyflow:energyflow@postgres:5432/energyflow
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

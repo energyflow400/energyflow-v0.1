@@ -1,0 +1,18 @@
+provider: PROVIDER_A
+source_file: data/power_prices.csv
+table: power_prices
+required_columns:
+  - trade_date
+  - country
+  - power_price_eur_mwh
+  - source
+country_codes:
+  - CZ
+  - DE
+  - AT
+  - SK
+validation:
+  allow_negative_prices: false
+  unique_key:
+    - trade_date
+    - country
